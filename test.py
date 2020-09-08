@@ -32,22 +32,41 @@ class Uniswap:
         token_reserve = self.token_reserve
         eth_amount = amount * (1.0 * self.balance) / total_liquidity
         token_amount = amount * (1.0 * token_reserve) / total_liquidity
+        self.balance -= eth_amount
+        self.token_reserve -= token_amount
         self.balances[sender] -= amount
         self.total_supply = total_liquidity - amount
         return eth_amount, token_amount
 
-    def sell_eth_buy_token(self, eth):
-        pass
+    # fee goes from 0.0 to 1.0. 
+    def sell_x_and_buy_y(self, x, x_reserve, y_reserve, fee = 0.01):
+        k = x_reserve * y_reserve
+        new_x = x_reserve + x
+        new_y = k * 1.0/new_x
+        y_to_give_sans_fees = y_reserve - new_y
+        y_to_give = y_to_give_sans_fees * (1 - fee)
+        y_reserve = y_reserve - y_to_give
+        return y_to_give, new_x, y_reserve
 
-    def sell_tokens_buy_eth(self, token):
-        pass
+    def sell_eth_buy_token(self, eth):
+        token_to_give, new_eth_balance, new_token_reserve = self.sell_x_and_buy_y(eth, self.balance, self.token_reserve)
+        self.balance = new_eth_balance
+        self.token_reserve = new_token_reserve
+        return token_to_give
+
+    def sell_token_buy_eth(self, token):
+        eth_to_give, new_token_reserve, new_eth_balance = self.sell_x_and_buy_y(token, self.token_reserve, self.balance)
+        self.balance = new_eth_balance
+        self.token_reserve = new_token_reserve
+        return eth_to_give
 
     def print(self):
-        print('-' * 10)
+        print('-' * 10, 'Uniswap Internals', '-' * 10)
         print('balance       = ' + str(self.balance))
         print('token_reserve = ' + str(self.token_reserve))
         print('total_supply  = ' + str(self.total_supply))
         print(self.balances)
+        print('-' * 10)
 
 if __name__ == '__main__':
     uniswap = Uniswap()
@@ -57,8 +76,11 @@ if __name__ == '__main__':
     uniswap.print()
     uniswap.add_liquidity(10, 200, "carol")
     uniswap.print()
-    print(uniswap.remove_liquidity(10, "alice"))
+    print("ETH Bought for 10 tokens: ", uniswap.sell_token_buy_eth(10))
     uniswap.print()
+    print("Alice removed liquidity: ", uniswap.remove_liquidity(10, "alice"))
+    uniswap.print()
+
 
 
     
