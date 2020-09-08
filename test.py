@@ -70,15 +70,15 @@ class Uniswap:
 
 if __name__ == '__main__':
     uniswap = Uniswap()
-    uniswap.add_liquidity(10, 200, "alice")
+    print("Alice added liquidity and got", uniswap.add_liquidity(10, 200, "alice"), "tokens")
     uniswap.print()
-    uniswap.add_liquidity(1, 20, "bob")
+    print("Bob added liquidity and got", uniswap.add_liquidity(1, 20, "bob"), "tokens")
     uniswap.print()
-    uniswap.add_liquidity(10, 200, "carol")
+    print("Carol added liquidity and got", uniswap.add_liquidity(3, 300, "carol"), "tokens")
     uniswap.print()
-    print("ETH Bought for 10 tokens: ", uniswap.sell_token_buy_eth(10))
+    print("ETH Bought for 10 tokens:", uniswap.sell_token_buy_eth(10))
     uniswap.print()
-    print("Alice removed liquidity: ", uniswap.remove_liquidity(10, "alice"))
+    print("Alice removed liquidity:", uniswap.remove_liquidity(10, "alice"))
     uniswap.print()
 
 
