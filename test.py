@@ -13,7 +13,7 @@ class Uniswap:
         if total_liquidity > 0:
             eth_reserve = self.balance - eth
             token_reserve = self.token_reserve
-            token_amount = eth * (1.0 * token_reserve/eth_reserve) + 1
+            token_amount = eth * (1.0 * token_reserve/eth_reserve)
             self.token_reserve += token_amount
             liquidity_minted = eth * (1.0 * total_liquidity) / eth_reserve
             self.balances[sender] += liquidity_minted
@@ -70,15 +70,12 @@ class Uniswap:
 
 if __name__ == '__main__':
     uniswap = Uniswap()
-    print("Alice added liquidity and got", uniswap.add_liquidity(10, 200, "alice"), "tokens")
+    print("Roger added liquidity and got", uniswap.add_liquidity(10, 10, "alice"), "tokens")
+    print("Tejaswi added liquidity and got", uniswap.add_liquidity(1, 1, "bob"), "tokens")
     uniswap.print()
-    print("Bob added liquidity and got", uniswap.add_liquidity(1, 20, "bob"), "tokens")
+    print("Token Bought for 1 ETH:", uniswap.sell_eth_buy_token(1))
     uniswap.print()
-    print("Carol added liquidity and got", uniswap.add_liquidity(3, 300, "carol"), "tokens")
-    uniswap.print()
-    print("ETH Bought for 10 tokens:", uniswap.sell_token_buy_eth(10))
-    uniswap.print()
-    print("Alice removed liquidity:", uniswap.remove_liquidity(10, "alice"))
+    print("Roger removed liquidity:", uniswap.remove_liquidity(10, "alice"))
     uniswap.print()
 
 
